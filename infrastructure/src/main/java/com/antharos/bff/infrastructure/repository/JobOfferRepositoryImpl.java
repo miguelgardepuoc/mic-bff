@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class JobOfferRepositoryImpl implements JobOfferRepository {
 
-  @Value("${job-offer.api.url}")
+  @Value("${rest-client.job-offer.host}")
   private String jobOfferApiUrl;
 
   private final RestTemplate restTemplate;
@@ -20,7 +20,7 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
   }
 
   @Override
-  public List<SimpleJobOffer> getJobOffers() {
+  public List<SimpleJobOffer> findAll() {
     SimpleJobOffer[] jobOffers =
         this.restTemplate.getForObject(this.jobOfferApiUrl, SimpleJobOffer[].class);
     assert jobOffers != null;

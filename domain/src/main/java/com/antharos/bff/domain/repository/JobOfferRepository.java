@@ -4,5 +4,5 @@ import com.antharos.bff.domain.joboffer.SimpleJobOffer;
 import java.util.List;
 
 public interface JobOfferRepository {
-  List<SimpleJobOffer> getJobOffers();
+  List<SimpleJobOffer> findAll();
 }
