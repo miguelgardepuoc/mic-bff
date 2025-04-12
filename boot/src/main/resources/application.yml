@@ -3,8 +3,11 @@ server:
 spring:
   application:
     name: mic-bff
+  mvc:
+    servlet:
+      path: /bff
 rest-client:
   job-offer:
     host: http://localhost:8081/api/job-offers
   corporate-organization:
-    host: http://localhost:8082/api/users
+    host: http://localhost:8086/corporate-organization

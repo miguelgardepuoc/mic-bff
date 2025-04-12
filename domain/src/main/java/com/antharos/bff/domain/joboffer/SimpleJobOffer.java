@@ -4,4 +4,4 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record SimpleJobOffer(
-    UUID id, UUID jobTitleId, byte[] photo, BigDecimal minSalary, BigDecimal maxSalary) {}
+    UUID id, UUID jobTitleId, String photoUrl, BigDecimal minSalary, BigDecimal maxSalary) {}

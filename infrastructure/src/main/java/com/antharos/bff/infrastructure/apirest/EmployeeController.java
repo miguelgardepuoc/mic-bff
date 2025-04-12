@@ -16,26 +16,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    private final HireEmployeeCommandHandler hireEmployeeCommandHandler;
+  private final HireEmployeeCommandHandler hireEmployeeCommandHandler;
 
-    @PostMapping("/hiring")
-    public ResponseEntity<Void> hireEmployee(@RequestBody UserDto request) {
-        HireEmployeeCommand command =
-                HireEmployeeCommand.builder()
-                        .userId(request.id())
-                        .dni(request.dni())
-                        .name(request.name())
-                        .surname(request.surname())
-                        .telephoneNumber(request.telephoneNumber())
-                        .salary(request.salary())
-                        .departmentId(request.departmentId())
-                        .hiringDate(request.hiringDate())
-                        .role(request.role())
-                        .jobTitleId(request.jobTitleId())
-                        .createdBy("admin")
-                        .build();
+  @PostMapping("/hiring")
+  public ResponseEntity<Void> hireEmployee(@RequestBody UserDto request) {
+    HireEmployeeCommand command =
+        HireEmployeeCommand.builder()
+            .userId(request.id())
+            .dni(request.dni())
+            .name(request.name())
+            .surname(request.surname())
+            .telephoneNumber(request.telephoneNumber())
+            .salary(request.salary())
+            .departmentId(request.departmentId())
+            .hiringDate(request.hiringDate())
+            .role(request.role())
+            .jobTitleId(request.jobTitleId())
+            .createdBy("admin")
+            .build();
 
-        this.hireEmployeeCommandHandler.doHandle(command);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    this.hireEmployeeCommandHandler.doHandle(command);
+    return new ResponseEntity<>(HttpStatus.CREATED);
+  }
 }
