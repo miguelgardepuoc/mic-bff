@@ -1,5 +1,6 @@
 package com.antharos.bff.infrastructure.apirest;
 
+import com.antharos.bff.domain.candidate.CandidateAlreadyRegisteredException;
 import com.antharos.bff.domain.globalexceptions.AlreadyExistsException;
 import com.antharos.bff.domain.globalexceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,5 +23,10 @@ public class GlobalExceptionHandler {
   public ResponseEntity<String> handleAlreadyExistsException(AlreadyExistsException ex) {
     log.warn("Resource already exists exception thrown: ", ex);
     return new ResponseEntity<>("Resource already exists: " + ex.getMessage(), HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(CandidateAlreadyRegisteredException.class)
+  public ResponseEntity<String> handleAlreadyRegistered(CandidateAlreadyRegisteredException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
   }
 }

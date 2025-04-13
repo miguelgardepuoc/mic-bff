@@ -9,4 +9,8 @@ public interface JobOfferRepository {
   List<SimpleJobOffer> findAll();
 
   JobOffer findById(UUID id);
+
+  boolean existsByEmail(String personalEmail);
+
+  void addCandidate(UUID candidateId, UUID jobOfferId, String personalEmail, String fileUrl);
 }
