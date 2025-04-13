@@ -1,0 +1,28 @@
+package com.antharos.bff.infrastructure.repository.model;
+
+import com.antharos.bff.domain.candidate.Candidate;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CandidatesMapper {
+
+  public static List<Candidate> toDomainList(List<FindCandidatesResponse> dtoList) {
+    return dtoList.stream().map(CandidatesMapper::toDomain).collect(Collectors.toList());
+  }
+
+  public static Candidate toDomain(FindCandidatesResponse dto) {
+    Candidate candidate = new Candidate();
+    candidate.setId(dto.id());
+    candidate.setStatus(dto.status());
+    candidate.setPersonalEmail(dto.personalEmail());
+    candidate.setCvUrl(dto.cvUrl());
+    candidate.setPhoneNumber(dto.phoneNumber());
+
+    String fullName = dto.name() + " " + dto.surname();
+    candidate.setFullName(fullName);
+
+    return candidate;
+  }
+}

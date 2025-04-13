@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class JobOfferController {
 
   private final FindJobOffersQueryHandler findJobOffersQueryHandler;
-
   private final FindJobOfferQueryHandler findJobOfferQueryHandler;
-
   private final JobOfferMapper mapper;
 
   @GetMapping
