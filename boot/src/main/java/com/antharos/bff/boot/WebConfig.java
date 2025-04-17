@@ -19,8 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
         .allowedHeaders("*");
   }
 
-  @Autowired
-  private JwtTokenInterceptor jwtTokenInterceptor;
+  @Autowired private JwtTokenInterceptor jwtTokenInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {

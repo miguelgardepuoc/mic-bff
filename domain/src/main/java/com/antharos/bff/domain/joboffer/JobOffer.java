@@ -1,14 +1,12 @@
 package com.antharos.bff.domain.joboffer;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public record JobOffer(
-    UUID id,
-    UUID jobTitleId,
-    String photoUrl,
+    String id,
+    String jobTitleId,
     BigDecimal minSalary,
     BigDecimal maxSalary,
-    Float remote,
+    short remote,
     String description,
     String requirement) {}

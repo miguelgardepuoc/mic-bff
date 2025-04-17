@@ -9,22 +9,23 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class JwtTokenInterceptor implements HandlerInterceptor {
 
-    private static final ThreadLocal<String> tokenHolder = new ThreadLocal<>();
+  private static final ThreadLocal<String> tokenHolder = new ThreadLocal<>();
 
-    public static String getToken() {
-        return tokenHolder.get();
-    }
+  public static String getToken() {
+    return tokenHolder.get();
+  }
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        tokenHolder.set(token);
-        return true;
-    }
+  @Override
+  public boolean preHandle(
+      HttpServletRequest request, HttpServletResponse response, Object handler) {
+    String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+    tokenHolder.set(token);
+    return true;
+  }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        tokenHolder.remove();
-    }
+  @Override
+  public void afterCompletion(
+      HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+    tokenHolder.remove();
+  }
 }
-

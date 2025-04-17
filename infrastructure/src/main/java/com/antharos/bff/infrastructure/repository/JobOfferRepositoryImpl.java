@@ -7,69 +7,77 @@ import com.antharos.bff.domain.repository.JobOfferRepository;
 import com.antharos.bff.infrastructure.repository.model.AddCandidateRequest;
 import com.antharos.bff.infrastructure.repository.model.CandidatesMapper;
 import com.antharos.bff.infrastructure.repository.model.FindCandidatesResponse;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Component
 public class JobOfferRepositoryImpl implements JobOfferRepository {
 
-  private final WebClient webClient;
+  private final WebClient jobOfferWebClient;
 
-  private final RestTemplate restTemplate;
-
-  @Value("${rest-client.job-offer.host}")
-  private String jobOfferApiUrl;
-
-  public JobOfferRepositoryImpl(WebClient.Builder webClientBuilder, RestTemplate restTemplate) {
-    this.webClient = webClientBuilder.baseUrl(this.jobOfferApiUrl).build();
-    this.restTemplate = restTemplate;
+  public JobOfferRepositoryImpl(@Qualifier("jobOfferWebClient") WebClient jobOfferWebClient) {
+    this.jobOfferWebClient = jobOfferWebClient;
   }
 
   @Override
   public List<SimpleJobOffer> findAll() {
-    SimpleJobOffer[] jobOffers =
-        this.restTemplate.getForObject(
-            this.jobOfferApiUrl + "/api/job-offers", SimpleJobOffer[].class);
-    assert jobOffers != null;
-    return List.of(jobOffers);
+    return jobOfferWebClient
+        .get()
+        .uri("/job-offers")
+        .retrieve()
+        .bodyToMono(SimpleJobOffer[].class)
+        .map(List::of)
+        .block();
   }
 
   @Override
   public JobOffer findById(UUID id) {
-    String url = this.jobOfferApiUrl + "/api/job-offers" + "/" + id;
-
-    return this.restTemplate.getForObject(url, JobOffer.class);
+    return jobOfferWebClient
+        .get()
+        .uri("/job-offers/{id}", id)
+        .retrieve()
+        .bodyToMono(JobOffer.class)
+        .block();
   }
 
   @Override
   public boolean existsByEmail(String personalEmail) {
-    String url = this.jobOfferApiUrl + "/candidates/email/" + personalEmail;
-    try {
-      this.restTemplate.getForObject(url, Candidate.class);
-      return true;
-    } catch (HttpClientErrorException.NotFound e) {
-      return false;
-    }
+    return Boolean.TRUE.equals(
+        jobOfferWebClient
+            .get()
+            .uri("/candidates/email/{email}", personalEmail)
+            .retrieve()
+            .onStatus(
+                HttpStatusCode::is4xxClientError,
+                clientResponse -> Mono.error(new RuntimeException("Not Found")))
+            .bodyToMono(Candidate.class)
+            .map(candidate -> true)
+            .onErrorReturn(false)
+            .block());
   }
 
   @Override
   public void addCandidate(
       UUID candidateId, UUID jobOfferId, String personalEmail, String fileUrl) {
-    final AddCandidateRequest request =
+    AddCandidateRequest request =
         new AddCandidateRequest(candidateId, jobOfferId, personalEmail, fileUrl);
-
-    this.restTemplate.postForObject(this.jobOfferApiUrl + "/candidates", request, Void.class);
+    jobOfferWebClient
+        .post()
+        .uri("/candidates")
+        .bodyValue(request)
+        .retrieve()
+        .toBodilessEntity()
+        .block();
   }
 
   @Override
   public void hireCandidate(String candidateId) {
-    this.webClient
+    jobOfferWebClient
         .patch()
         .uri("/candidates/{id}/hire", candidateId)
         .retrieve()
@@ -79,7 +87,7 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
 
   @Override
   public void interviewCandidate(String candidateId) {
-    this.webClient
+    jobOfferWebClient
         .patch()
         .uri("/candidates/{id}/interview", candidateId)
         .retrieve()
@@ -89,7 +97,7 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
 
   @Override
   public void rejectCandidate(String candidateId) {
-    this.webClient
+    jobOfferWebClient
         .patch()
         .uri("/candidates/{id}/reject", candidateId)
         .retrieve()
@@ -99,11 +107,23 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
 
   @Override
   public List<Candidate> findByJobOfferId(UUID jobOfferId) {
-    FindCandidatesResponse[] candidates =
-        this.restTemplate.getForObject(
-            this.jobOfferApiUrl + "/candidates?jobOfferId=" + jobOfferId,
-            FindCandidatesResponse[].class);
-    assert candidates != null;
-    return CandidatesMapper.toDomainList(Arrays.stream(candidates).toList());
+    return jobOfferWebClient
+        .get()
+        .uri("/candidates?jobOfferId={jobOfferId}", jobOfferId)
+        .retrieve()
+        .bodyToMono(FindCandidatesResponse[].class)
+        .map(candidates -> CandidatesMapper.toDomainList(List.of(candidates)))
+        .block();
+  }
+
+  @Override
+  public void addJobOffer(JobOffer jobOffer) {
+    jobOfferWebClient
+        .post()
+        .uri("/job-offers")
+        .bodyValue(jobOffer)
+        .retrieve()
+        .toBodilessEntity()
+        .block();
   }
 }

@@ -22,4 +22,6 @@ public interface JobOfferRepository {
   void rejectCandidate(String candidateId);
 
   List<Candidate> findByJobOfferId(UUID jobOfferId);
+
+  void addJobOffer(JobOffer jobOffer);
 }
