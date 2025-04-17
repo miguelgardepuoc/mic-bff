@@ -2,40 +2,60 @@ package com.antharos.bff.infrastructure.repository;
 
 import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
+import com.antharos.bff.domain.login.Login;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
+import com.antharos.bff.infrastructure.repository.model.LoginRequest;
+import com.antharos.bff.infrastructure.repository.model.RegisterUserRequest;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
-@Component
+@Service
 public class CorporateOrganizationRepositoryImpl implements CorporateOrganizationRepository {
-  @Value("${rest-client.corporate-organization.host}")
-  private String corporateOrganizationApiUrl;
 
-  private final RestTemplate restTemplate;
+  private final WebClient corporateWebClient;
 
-  public CorporateOrganizationRepositoryImpl(RestTemplate restTemplate) {
-    this.restTemplate = restTemplate;
+  public CorporateOrganizationRepositoryImpl(
+      @Qualifier("corporateWebClient") WebClient corporateWebClient) {
+    this.corporateWebClient = corporateWebClient;
   }
 
   @Override
   public void hire(Employee newEmployee) {
-    this.restTemplate.postForObject(this.corporateOrganizationApiUrl, newEmployee, Void.class);
+    corporateWebClient.post().uri("/").bodyValue(newEmployee).retrieve().toBodilessEntity().block();
   }
 
   @Override
   public List<JobTitle> findJobTitles() {
-    String jobTitlesContextPath = "/job-titles";
-    ResponseEntity<List<JobTitle>> response =
-        this.restTemplate.exchange(
-            corporateOrganizationApiUrl + jobTitlesContextPath,
-            HttpMethod.GET,
-            null,
-            new ParameterizedTypeReference<>() {});
-    return response.getBody();
+    return corporateWebClient
+        .get()
+        .uri("/job-titles")
+        .retrieve()
+        .bodyToFlux(JobTitle.class)
+        .collectList()
+        .block();
+  }
+
+  @Override
+  public void signUp(String username, String password) {
+    corporateWebClient
+        .post()
+        .uri("/auth/signup")
+        .bodyValue(new RegisterUserRequest(username, password))
+        .retrieve()
+        .toBodilessEntity()
+        .block();
+  }
+
+  @Override
+  public Login login(String username, String password) {
+    return corporateWebClient
+        .post()
+        .uri("/auth/login")
+        .bodyValue(new LoginRequest(username, password))
+        .retrieve()
+        .bodyToMono(Login.class)
+        .block();
   }
 }

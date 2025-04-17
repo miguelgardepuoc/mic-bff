@@ -69,29 +69,32 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
 
   @Override
   public void hireCandidate(String candidateId) {
-    this.webClient.patch()
-            .uri("/candidates/{id}/hire", candidateId)
-            .retrieve()
-            .toBodilessEntity()
-            .block();
+    this.webClient
+        .patch()
+        .uri("/candidates/{id}/hire", candidateId)
+        .retrieve()
+        .toBodilessEntity()
+        .block();
   }
 
   @Override
   public void interviewCandidate(String candidateId) {
-    this.webClient.patch()
-            .uri("/candidates/{id}/interview", candidateId)
-            .retrieve()
-            .toBodilessEntity()
-            .block();
+    this.webClient
+        .patch()
+        .uri("/candidates/{id}/interview", candidateId)
+        .retrieve()
+        .toBodilessEntity()
+        .block();
   }
 
   @Override
   public void rejectCandidate(String candidateId) {
-    this.webClient.patch()
-            .uri("/candidates/{id}/reject", candidateId)
-            .retrieve()
-            .toBodilessEntity()
-            .block();
+    this.webClient
+        .patch()
+        .uri("/candidates/{id}/reject", candidateId)
+        .retrieve()
+        .toBodilessEntity()
+        .block();
   }
 
   @Override
