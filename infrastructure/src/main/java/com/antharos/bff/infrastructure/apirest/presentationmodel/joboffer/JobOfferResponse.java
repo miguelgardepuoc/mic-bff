@@ -1,4 +1,4 @@
-package com.antharos.bff.infrastructure.apirest.presentationmodel;
+package com.antharos.bff.infrastructure.apirest.presentationmodel.joboffer;
 
 import java.math.BigDecimal;
 import java.util.UUID;

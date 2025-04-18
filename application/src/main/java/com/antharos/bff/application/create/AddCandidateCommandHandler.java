@@ -16,7 +16,7 @@ public class AddCandidateCommandHandler {
 
   public void doHandle(final AddCandidateCommand command) throws IOException {
     if (this.jobOfferRepository.findById(command.getJobOfferId()) == null) {
-      throw new JobOfferNotFound(command.getJobOfferId().toString());
+      throw new JobOfferNotFound(command.getJobOfferId());
     }
     if (this.jobOfferRepository.existsByEmail(command.getPersonalEmail())) {
       throw new CandidateAlreadyRegisteredException(command.getPersonalEmail());

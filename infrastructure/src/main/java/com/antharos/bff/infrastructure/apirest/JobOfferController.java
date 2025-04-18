@@ -10,10 +10,8 @@ import com.antharos.bff.application.find.FindJobOffersQuery;
 import com.antharos.bff.application.find.FindJobOffersQueryHandler;
 import com.antharos.bff.application.update.UpdateJobOfferCommand;
 import com.antharos.bff.application.update.UpdateJobOfferCommandHandler;
-import com.antharos.bff.infrastructure.apirest.presentationmodel.*;
-
+import com.antharos.bff.infrastructure.apirest.presentationmodel.joboffer.*;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +39,7 @@ public class JobOfferController {
   }
 
   @GetMapping("/{jobOfferId}")
-  public ResponseEntity<JobOfferResponse> findJobOfferDetail(@PathVariable UUID jobOfferId) {
+  public ResponseEntity<JobOfferResponse> findJobOfferDetail(@PathVariable String jobOfferId) {
     return this.findJobOfferQueryHandler
         .handle(FindJobOfferQuery.of(jobOfferId))
         .map(this.mapper::toJobOfferResponse)
@@ -69,14 +67,14 @@ public class JobOfferController {
   @PutMapping
   public ResponseEntity<Void> updateJobOffer(@RequestBody UpdateJobOfferRequest request) {
     UpdateJobOfferCommand command =
-            UpdateJobOfferCommand.builder()
-                    .id(request.getId())
-                    .description(request.getDescription())
-                    .remote(request.getRemote())
-                    .requirement(request.getRequirement())
-                    .minSalary(request.getMinSalary())
-                    .maxSalary(request.getMaxSalary())
-                    .build();
+        UpdateJobOfferCommand.builder()
+            .id(request.getId())
+            .description(request.getDescription())
+            .remote(request.getRemote())
+            .requirement(request.getRequirement())
+            .minSalary(request.getMinSalary())
+            .maxSalary(request.getMaxSalary())
+            .build();
 
     this.updateJobOfferCommandHandler.doHandle(command);
     return new ResponseEntity<>(HttpStatus.OK);
@@ -84,8 +82,7 @@ public class JobOfferController {
 
   @DeleteMapping("/{jobOfferId}")
   public ResponseEntity<Void> withdrawJobOffer(@PathVariable String jobOfferId) {
-    WithdrawJobOfferCommand command =
-            WithdrawJobOfferCommand.builder().id(jobOfferId).build();
+    WithdrawJobOfferCommand command = WithdrawJobOfferCommand.builder().id(jobOfferId).build();
 
     this.withdrawJobOfferCommandHandler.doHandle(command);
     return new ResponseEntity<>(HttpStatus.OK);

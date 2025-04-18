@@ -1,9 +1,8 @@
 package com.antharos.bff.application.update;
 
+import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Value;
-
-import java.math.BigDecimal;
 
 @Builder
 @Value

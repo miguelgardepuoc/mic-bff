@@ -1,4 +1,4 @@
-package com.antharos.bff.infrastructure.apirest.presentationmodel;
+package com.antharos.bff.infrastructure.apirest.presentationmodel.candidate;
 
 import java.util.UUID;
 

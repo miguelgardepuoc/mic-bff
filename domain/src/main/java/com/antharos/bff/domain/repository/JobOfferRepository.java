@@ -4,16 +4,15 @@ import com.antharos.bff.domain.candidate.Candidate;
 import com.antharos.bff.domain.joboffer.JobOffer;
 import com.antharos.bff.domain.joboffer.SimpleJobOffer;
 import java.util.List;
-import java.util.UUID;
 
 public interface JobOfferRepository {
   List<SimpleJobOffer> findAll();
 
-  JobOffer findById(UUID id);
+  JobOffer findById(String id);
 
   boolean existsByEmail(String personalEmail);
 
-  void addCandidate(UUID candidateId, UUID jobOfferId, String personalEmail, String fileUrl);
+  void addCandidate(String candidateId, String jobOfferId, String personalEmail, String fileUrl);
 
   void hireCandidate(String candidateId);
 
@@ -21,7 +20,7 @@ public interface JobOfferRepository {
 
   void rejectCandidate(String candidateId);
 
-  List<Candidate> findByJobOfferId(UUID jobOfferId);
+  List<Candidate> findByJobOfferId(String jobOfferId);
 
   void addJobOffer(JobOffer jobOffer);
 

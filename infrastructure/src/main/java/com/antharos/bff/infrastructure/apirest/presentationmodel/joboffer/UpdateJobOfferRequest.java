@@ -1,12 +1,11 @@
-package com.antharos.bff.infrastructure.apirest.presentationmodel;
+package com.antharos.bff.infrastructure.apirest.presentationmodel.joboffer;
 
 import java.math.BigDecimal;
 import lombok.Getter;
 
 @Getter
-public class AddJobOfferRequest {
+public class UpdateJobOfferRequest {
   String id;
-  String jobTitleId;
   String description;
   BigDecimal minSalary;
   BigDecimal maxSalary;

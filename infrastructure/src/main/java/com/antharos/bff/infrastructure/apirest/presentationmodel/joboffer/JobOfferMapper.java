@@ -1,4 +1,4 @@
-package com.antharos.bff.infrastructure.apirest.presentationmodel;
+package com.antharos.bff.infrastructure.apirest.presentationmodel.joboffer;
 
 import com.antharos.bff.application.model.JobOfferWithTitle;
 import com.antharos.bff.application.model.SimpleJobOfferWithTitle;

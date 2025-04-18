@@ -1,5 +1,6 @@
 package com.antharos.bff.infrastructure.repository;
 
+import com.antharos.bff.domain.department.Department;
 import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
 import com.antharos.bff.domain.login.Login;
@@ -57,5 +58,16 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
         .retrieve()
         .bodyToMono(Login.class)
         .block();
+  }
+
+  @Override
+  public List<Department> findAll() {
+    return corporateWebClient
+            .get()
+            .uri("/departments")
+            .retrieve()
+            .bodyToFlux(Department.class)
+            .collectList()
+            .block();
   }
 }

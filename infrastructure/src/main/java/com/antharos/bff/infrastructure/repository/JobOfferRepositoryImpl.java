@@ -8,7 +8,6 @@ import com.antharos.bff.infrastructure.repository.model.AddCandidateRequest;
 import com.antharos.bff.infrastructure.repository.model.CandidatesMapper;
 import com.antharos.bff.infrastructure.repository.model.FindCandidatesResponse;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -36,7 +35,7 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
   }
 
   @Override
-  public JobOffer findById(UUID id) {
+  public JobOffer findById(String id) {
     return jobOfferWebClient
         .get()
         .uri("/job-offers/{id}", id)
@@ -63,7 +62,7 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
 
   @Override
   public void addCandidate(
-      UUID candidateId, UUID jobOfferId, String personalEmail, String fileUrl) {
+      String candidateId, String jobOfferId, String personalEmail, String fileUrl) {
     AddCandidateRequest request =
         new AddCandidateRequest(candidateId, jobOfferId, personalEmail, fileUrl);
     jobOfferWebClient
@@ -106,7 +105,7 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
   }
 
   @Override
-  public List<Candidate> findByJobOfferId(UUID jobOfferId) {
+  public List<Candidate> findByJobOfferId(String jobOfferId) {
     return jobOfferWebClient
         .get()
         .uri("/candidates?jobOfferId={jobOfferId}", jobOfferId)
@@ -129,19 +128,17 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
 
   @Override
   public void withdrawJobOffer(String id) {
-    jobOfferWebClient
-            .delete()
-            .uri("/job-offers/{id}", id);
+    jobOfferWebClient.delete().uri("/job-offers/{id}", id).retrieve().toBodilessEntity().block();
   }
 
   @Override
   public void update(JobOffer jobOffer) {
     jobOfferWebClient
-            .put()
-            .uri("/job-offers")
-            .bodyValue(jobOffer)
-            .retrieve()
-            .toBodilessEntity()
-            .block();
+        .put()
+        .uri("/job-offers")
+        .bodyValue(jobOffer)
+        .retrieve()
+        .toBodilessEntity()
+        .block();
   }
 }

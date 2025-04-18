@@ -13,14 +13,14 @@ public class UpdateJobOfferCommandHandler {
 
   public void doHandle(final UpdateJobOfferCommand command) {
     final JobOffer jobOffer =
-            new JobOffer(
-                    command.getId(),
-                    null,
-                    command.getMinSalary(),
-                    command.getMaxSalary(),
-                    command.getRemote(),
-                    command.getDescription(),
-                    command.getRequirement());
+        new JobOffer(
+            command.getId(),
+            null,
+            command.getMinSalary(),
+            command.getMaxSalary(),
+            command.getRemote(),
+            command.getDescription(),
+            command.getRequirement());
     this.jobOfferRepository.update(jobOffer);
   }
 }
