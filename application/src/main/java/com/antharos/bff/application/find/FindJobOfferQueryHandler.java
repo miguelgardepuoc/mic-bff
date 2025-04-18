@@ -26,7 +26,7 @@ public class FindJobOfferQueryHandler {
     Map<UUID, JobTitle> jobTitleMap =
         jobTitles.stream().collect(Collectors.toMap(JobTitle::getId, jt -> jt));
 
-    JobTitle jobTitle = jobTitleMap.get(jobOffer.jobTitleId());
+    JobTitle jobTitle = jobTitleMap.get(UUID.fromString(jobOffer.jobTitleId()));
     String description = jobTitle != null ? jobTitle.getDescription() : "Unknown";
     String photoUrl = jobTitle != null ? jobTitle.getPhotoUrl() : null;
 

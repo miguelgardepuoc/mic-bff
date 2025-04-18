@@ -24,4 +24,8 @@ public interface JobOfferRepository {
   List<Candidate> findByJobOfferId(UUID jobOfferId);
 
   void addJobOffer(JobOffer jobOffer);
+
+  void withdrawJobOffer(String id);
+
+  void update(JobOffer jobOffer);
 }

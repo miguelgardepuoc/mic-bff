@@ -20,7 +20,13 @@ public class CandidatesMapper {
     candidate.setCvUrl(dto.cvUrl());
     candidate.setPhoneNumber(dto.phoneNumber());
 
-    String fullName = dto.name() + " " + dto.surname();
+    String fullName = null;
+    if (dto.name() != null) {
+      fullName = dto.name();
+      if (dto.surname() != null) {
+        fullName += " " + dto.surname();
+      }
+    }
     candidate.setFullName(fullName);
 
     return candidate;

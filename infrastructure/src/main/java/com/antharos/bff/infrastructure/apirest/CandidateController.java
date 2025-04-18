@@ -54,7 +54,7 @@ public class CandidateController {
         this.findCandidatesByJobOfferQueryHandler.handle(
             FindCandidatesByJobOfferQuery.of(jobOfferId));
 
-    if (candidates.isEmpty()) {
+    if (candidates == null || candidates.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
 

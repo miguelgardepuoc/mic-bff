@@ -126,4 +126,22 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
         .toBodilessEntity()
         .block();
   }
+
+  @Override
+  public void withdrawJobOffer(String id) {
+    jobOfferWebClient
+            .delete()
+            .uri("/job-offers/{id}", id);
+  }
+
+  @Override
+  public void update(JobOffer jobOffer) {
+    jobOfferWebClient
+            .put()
+            .uri("/job-offers")
+            .bodyValue(jobOffer)
+            .retrieve()
+            .toBodilessEntity()
+            .block();
+  }
 }
