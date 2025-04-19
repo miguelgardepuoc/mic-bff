@@ -7,7 +7,6 @@ import com.antharos.bff.domain.jobtitle.JobTitle;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,11 @@ public class FindEmployeesQueryHandler {
     List<JobTitle> jobTitles = this.corporateOrganizationRepository.findJobTitles();
     List<Employee> employees = this.corporateOrganizationRepository.findAllEmployees();
 
-    Map<UUID, String> departmentNameById =
+    Map<String, String> departmentNameById =
         departments.stream()
             .collect(Collectors.toMap(Department::getId, Department::getDescription));
 
-    Map<UUID, String> jobTitleNameById =
+    Map<String, String> jobTitleNameById =
         jobTitles.stream().collect(Collectors.toMap(JobTitle::getId, JobTitle::getDescription));
 
     return employees.stream()
@@ -38,9 +37,9 @@ public class FindEmployeesQueryHandler {
                     emp.name() + " " + emp.surname(),
                     emp.salary(),
                     emp.dni(),
-                    jobTitleNameById.getOrDefault(UUID.fromString(emp.jobTitleId()), "Unknown"),
+                    jobTitleNameById.getOrDefault(emp.jobTitleId(), "Unknown"),
                     emp.hiringDate(),
-                    departmentNameById.getOrDefault(UUID.fromString(emp.departmentId()), "Unknown"),
+                    departmentNameById.getOrDefault(emp.departmentId(), "Unknown"),
                     emp.status()))
         .collect(Collectors.toList());
   }

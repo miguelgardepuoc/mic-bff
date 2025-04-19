@@ -19,4 +19,10 @@ public interface CorporateOrganizationRepository {
   List<Department> findAll();
 
   List<Employee> findAllEmployees();
+
+  void disableDepartment(String departmentId);
+
+  void renameDepartment(String departmentId, String description);
+
+  void createDepartment(String id, String description);
 }

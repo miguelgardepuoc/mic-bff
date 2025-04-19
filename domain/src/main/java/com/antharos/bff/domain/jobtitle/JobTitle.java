@@ -1,6 +1,5 @@
 package com.antharos.bff.domain.jobtitle;
 
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class JobTitle {
 
-  private UUID id;
+  private String id;
 
   private String description;
 

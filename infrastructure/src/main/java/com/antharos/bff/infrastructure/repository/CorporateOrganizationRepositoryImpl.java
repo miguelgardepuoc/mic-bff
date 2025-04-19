@@ -81,4 +81,36 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
         .collectList()
         .block();
   }
+
+  @Override
+  public void disableDepartment(String departmentId) {
+    corporateWebClient
+        .delete()
+        .uri("/departments/{id}", departmentId)
+        .retrieve()
+        .toBodilessEntity()
+        .block();
+  }
+
+  @Override
+  public void renameDepartment(String departmentId, String description) {
+    corporateWebClient
+        .patch()
+        .uri("/departments/{id}/renaming", departmentId)
+        .bodyValue(new Department(departmentId, description))
+        .retrieve()
+        .toBodilessEntity()
+        .block();
+  }
+
+  @Override
+  public void createDepartment(String id, String description) {
+    corporateWebClient
+        .post()
+        .uri("/departments")
+        .bodyValue(new Department(id, description))
+        .retrieve()
+        .toBodilessEntity()
+        .block();
+  }
 }
