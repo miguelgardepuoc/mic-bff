@@ -11,6 +11,5 @@ public class Candidate {
   private String personalEmail;
   private String fullName;
   private CandidateStatus status;
-  private String cvUrl;
-  private String phoneNumber;
+  private String cvFilename;
 }

@@ -17,4 +17,6 @@ public interface CorporateOrganizationRepository {
   Login login(String username, String password);
 
   List<Department> findAll();
+
+  List<Employee> findAllEmployees();
 }

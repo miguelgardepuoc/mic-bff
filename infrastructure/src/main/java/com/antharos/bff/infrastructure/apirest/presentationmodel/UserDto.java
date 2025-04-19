@@ -2,7 +2,7 @@ package com.antharos.bff.infrastructure.apirest.presentationmodel;
 
 import com.antharos.bff.domain.employee.Role;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 public record UserDto(
     String id,
@@ -12,6 +12,6 @@ public record UserDto(
     String telephoneNumber,
     BigDecimal salary,
     String departmentId,
-    LocalDate hiringDate,
+    Date hiringDate,
     Role role,
     String jobTitleId) {}

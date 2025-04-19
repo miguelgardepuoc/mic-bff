@@ -2,10 +2,9 @@ package com.antharos.bff.application.find;
 
 import com.antharos.bff.domain.department.Department;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Service

@@ -8,7 +8,6 @@ public record FindCandidatesResponse(
     UUID jobOfferId,
     CandidateStatus status,
     String personalEmail,
-    String cvUrl,
+    String cvFilename,
     String name,
-    String surname,
-    String phoneNumber) {}
+    String surname) {}

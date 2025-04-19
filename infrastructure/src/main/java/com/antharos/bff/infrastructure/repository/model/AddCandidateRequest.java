@@ -9,5 +9,5 @@ public class AddCandidateRequest {
   String id;
   String jobOfferId;
   String personalEmail;
-  String cvUrl;
+  String cvFilename;
 }

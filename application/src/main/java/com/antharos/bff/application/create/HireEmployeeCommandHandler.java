@@ -14,6 +14,7 @@ public class HireEmployeeCommandHandler {
     final Employee employee =
         new Employee(
             command.getUserId(),
+            null,
             command.getDni(),
             command.getName(),
             command.getSurname(),
@@ -22,7 +23,8 @@ public class HireEmployeeCommandHandler {
             command.getDepartmentId(),
             command.getHiringDate(),
             command.getRole(),
-            command.getJobTitleId());
+            command.getJobTitleId(),
+            null);
     this.corporateOrganizationRepository.hire(employee);
   }
 }

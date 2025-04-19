@@ -21,8 +21,8 @@ public class AddCandidateCommandHandler {
     if (this.jobOfferRepository.existsByEmail(command.getPersonalEmail())) {
       throw new CandidateAlreadyRegisteredException(command.getPersonalEmail());
     }
-    final String fileUrl = this.blobRepository.uploadFile(command.getCv());
+    final String cvFilename = this.blobRepository.uploadFile(command.getCv());
     this.jobOfferRepository.addCandidate(
-        command.getCandidateId(), command.getJobOfferId(), command.getPersonalEmail(), fileUrl);
+        command.getCandidateId(), command.getJobOfferId(), command.getPersonalEmail(), cvFilename);
   }
 }

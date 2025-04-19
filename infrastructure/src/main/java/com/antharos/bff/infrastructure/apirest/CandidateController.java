@@ -13,7 +13,6 @@ import com.antharos.bff.infrastructure.apirest.presentationmodel.candidate.Simpl
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

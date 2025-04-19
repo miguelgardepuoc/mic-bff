@@ -63,11 +63,22 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
   @Override
   public List<Department> findAll() {
     return corporateWebClient
-            .get()
-            .uri("/departments")
-            .retrieve()
-            .bodyToFlux(Department.class)
-            .collectList()
-            .block();
+        .get()
+        .uri("/departments")
+        .retrieve()
+        .bodyToFlux(Department.class)
+        .collectList()
+        .block();
+  }
+
+  @Override
+  public List<Employee> findAllEmployees() {
+    return corporateWebClient
+        .get()
+        .uri("/employees")
+        .retrieve()
+        .bodyToFlux(Employee.class)
+        .collectList()
+        .block();
   }
 }

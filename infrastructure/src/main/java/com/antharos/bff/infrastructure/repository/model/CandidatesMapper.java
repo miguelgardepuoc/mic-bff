@@ -17,8 +17,7 @@ public class CandidatesMapper {
     candidate.setId(dto.id());
     candidate.setStatus(dto.status());
     candidate.setPersonalEmail(dto.personalEmail());
-    candidate.setCvUrl(dto.cvUrl());
-    candidate.setPhoneNumber(dto.phoneNumber());
+    candidate.setCvFilename(dto.cvFilename());
 
     String fullName = null;
     if (dto.name() != null) {

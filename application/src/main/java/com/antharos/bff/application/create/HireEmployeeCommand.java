@@ -2,7 +2,7 @@ package com.antharos.bff.application.create;
 
 import com.antharos.bff.domain.employee.Role;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 import lombok.Builder;
 import lombok.Value;
 
@@ -16,7 +16,7 @@ public class HireEmployeeCommand {
   String telephoneNumber;
   BigDecimal salary;
   String departmentId;
-  LocalDate hiringDate;
+  Date hiringDate;
   Role role;
   String jobTitleId;
   String createdBy;
