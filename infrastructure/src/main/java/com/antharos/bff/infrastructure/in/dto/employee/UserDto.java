@@ -1,11 +1,11 @@
-package com.antharos.bff.domain.employee;
+package com.antharos.bff.infrastructure.in.dto.employee;
 
+import com.antharos.bff.domain.employee.Role;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record Employee(
+public record UserDto(
     String id,
-    Long employeeNumber,
     String dni,
     String name,
     String surname,
@@ -14,5 +14,4 @@ public record Employee(
     String departmentId,
     LocalDate hiringDate,
     Role role,
-    String jobTitleId,
-    Status status) {}
+    String jobTitleId) {}

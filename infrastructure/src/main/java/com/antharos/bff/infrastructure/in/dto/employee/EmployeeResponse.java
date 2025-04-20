@@ -1,10 +1,10 @@
-package com.antharos.bff.application.model;
+package com.antharos.bff.infrastructure.in.dto.employee;
 
 import com.antharos.bff.domain.employee.Status;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record SimpleEmployee(
+public record EmployeeResponse(
     String id,
     Long employeeNumber,
     String fullName,

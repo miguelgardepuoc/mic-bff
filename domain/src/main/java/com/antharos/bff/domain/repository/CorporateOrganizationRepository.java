@@ -25,4 +25,10 @@ public interface CorporateOrganizationRepository {
   void renameDepartment(String departmentId, String description);
 
   void createDepartment(String id, String description);
+
+  void terminateEmployee(String userId);
+
+  void putEmployeeOnLeave(String userId);
+
+  void markEmployeeAsInactive(String userId);
 }
