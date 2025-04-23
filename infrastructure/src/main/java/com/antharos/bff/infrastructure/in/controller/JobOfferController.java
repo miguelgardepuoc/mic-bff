@@ -2,13 +2,13 @@ package com.antharos.bff.infrastructure.in.controller;
 
 import com.antharos.bff.application.commands.joboffer.add.AddJobOfferCommand;
 import com.antharos.bff.application.commands.joboffer.add.AddJobOfferCommandHandler;
+import com.antharos.bff.application.commands.joboffer.update.UpdateJobOfferCommand;
+import com.antharos.bff.application.commands.joboffer.update.UpdateJobOfferCommandHandler;
 import com.antharos.bff.application.commands.joboffer.withdraw.WithdrawJobOfferCommand;
 import com.antharos.bff.application.commands.joboffer.withdraw.WithdrawJobOfferCommandHandler;
 import com.antharos.bff.application.queries.joboffer.FindJobOfferQuery;
 import com.antharos.bff.application.queries.joboffer.FindJobOfferQueryHandler;
 import com.antharos.bff.application.queries.joboffer.FindJobOffersQueryHandler;
-import com.antharos.bff.application.commands.joboffer.update.UpdateJobOfferCommand;
-import com.antharos.bff.application.commands.joboffer.update.UpdateJobOfferCommandHandler;
 import com.antharos.bff.infrastructure.in.dto.joboffer.*;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +33,7 @@ public class JobOfferController {
   @GetMapping
   public ResponseEntity<List<SimpleJobOfferResponse>> findJobOffers() {
     return ResponseEntity.ok(
-        this.mapper.toSimpleJobOffers(
-            this.findJobOffersQueryHandler.handle().stream().toList()));
+        this.mapper.toSimpleJobOffers(this.findJobOffersQueryHandler.handle().stream().toList()));
   }
 
   @GetMapping("/{jobOfferId}")

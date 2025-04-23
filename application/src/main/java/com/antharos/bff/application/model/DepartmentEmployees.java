@@ -1,3 +1,3 @@
 package com.antharos.bff.application.model;
 
-public record DepartmentEmployees(String department, long totalEmployees) {}
+public record DepartmentEmployees(String department, int percentage) {}

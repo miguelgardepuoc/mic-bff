@@ -1,7 +1,6 @@
 package com.antharos.bff.domain.repository;
 
 import com.antharos.bff.domain.report.*;
-
 import java.util.List;
 
 public interface AnalyticsRepository {
