@@ -10,8 +10,6 @@ public interface JobOfferRepository {
 
   JobOffer findById(String id);
 
-  boolean existsByEmail(String personalEmail);
-
   void addCandidate(String candidateId, String jobOfferId, String personalEmail, String fileUrl);
 
   void hireCandidate(String candidateId);
@@ -27,4 +25,6 @@ public interface JobOfferRepository {
   void withdrawJobOffer(String id);
 
   void update(JobOffer jobOffer);
+
+  Candidate findCandidateById(String candidateId);
 }

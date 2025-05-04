@@ -5,7 +5,6 @@ import com.antharos.bff.domain.department.Department;
 import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class FindEmployeesQueryHandler {
                     emp.hiringDate(),
                     departmentNameById.getOrDefault(emp.departmentId(), "Unknown"),
                     emp.status()))
-            .sorted(Comparator.comparing(SimpleEmployee::employeeNumber))
-            .collect(Collectors.toList());
+        .sorted(Comparator.comparing(SimpleEmployee::employeeNumber))
+        .collect(Collectors.toList());
   }
 }

@@ -43,9 +43,8 @@ public class EmployeeController {
             .salary(request.salary())
             .departmentId(request.departmentId())
             .hiringDate(request.hiringDate())
-            .role(request.role())
-            .jobTitleId(request.jobTitleId())
             .createdBy("admin")
+            .candidateId(request.candidateId())
             .build();
 
     this.hireEmployeeCommandHandler.doHandle(command);

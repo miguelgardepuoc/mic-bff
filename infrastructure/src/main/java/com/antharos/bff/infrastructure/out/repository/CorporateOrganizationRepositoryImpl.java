@@ -5,12 +5,18 @@ import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
 import com.antharos.bff.domain.login.Login;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
+import com.antharos.bff.infrastructure.in.util.ErrorResponse;
+import com.antharos.bff.infrastructure.out.repository.exception.HiringValidationException;
 import com.antharos.bff.infrastructure.out.repository.model.LoginRequest;
 import com.antharos.bff.infrastructure.out.repository.model.RegisterUserRequest;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 public class CorporateOrganizationRepositoryImpl implements CorporateOrganizationRepository {
@@ -24,7 +30,20 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public void hire(Employee newEmployee) {
-    corporateWebClient.post().uri("/").bodyValue(newEmployee).retrieve().toBodilessEntity().block();
+    this.corporateWebClient
+        .post()
+        .uri("/employees/hiring")
+        .bodyValue(newEmployee)
+        .retrieve()
+        .onStatus(
+            HttpStatusCode::is4xxClientError,
+            response ->
+                response
+                    .bodyToMono(ErrorResponse.class)
+                    .flatMap(
+                        errorResponse -> Mono.error(new HiringValidationException(errorResponse))))
+        .toBodilessEntity()
+        .block();
   }
 
   @Override
@@ -46,17 +65,6 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
         .bodyValue(new RegisterUserRequest(username, password))
         .retrieve()
         .toBodilessEntity()
-        .block();
-  }
-
-  @Override
-  public Login login(String username, String password) {
-    return corporateWebClient
-        .post()
-        .uri("/auth/login")
-        .bodyValue(new LoginRequest(username, password))
-        .retrieve()
-        .bodyToMono(Login.class)
         .block();
   }
 
@@ -142,5 +150,30 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
         .retrieve()
         .toBodilessEntity()
         .block();
+  }
+
+  @Override
+  public Optional<Employee> findByUsername(String username) {
+    try {
+      Employee employee =
+          this.corporateWebClient
+              .get()
+              .uri("/employees/username/{username}", username)
+              .retrieve()
+              .onStatus(
+                  HttpStatusCode::is4xxClientError,
+                  response -> {
+                    if (response.statusCode() == HttpStatus.NOT_FOUND) {
+                      return Mono.empty();
+                    }
+                    return response.createException();
+                  })
+              .bodyToMono(Employee.class)
+              .block();
+
+      return Optional.ofNullable(employee);
+    } catch (Exception e) {
+      throw new RuntimeException("Error retrieving employee by username", e);
+    }
   }
 }

@@ -8,7 +8,6 @@ import com.antharos.bff.domain.department.Department;
 import com.antharos.bff.domain.jobtitle.JobTitle;
 import com.antharos.bff.domain.repository.AnalyticsRepository;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,113 +89,127 @@ public class GetDashboardDataHandler {
     }
   }
 
-    private List<DepartmentEmployees> mapDepartments(
-            List<com.antharos.bff.domain.report.DepartmentEmployees> data,
-            Map<String, String> nameMap,
-            long totalEmployees) {
+  private List<DepartmentEmployees> mapDepartments(
+      List<com.antharos.bff.domain.report.DepartmentEmployees> data,
+      Map<String, String> nameMap,
+      long totalEmployees) {
 
-        if (totalEmployees == 0 || data.isEmpty()) {
-            return data.stream()
-                    .map(de -> new DepartmentEmployees(
-                            nameMap.getOrDefault(de.departmentId().toString(), "Unknown Department"),
-                            0))
-                    .toList();
-        }
-
-        List<RawEntry> rawEntries = data.stream()
-                .map(de -> {
-                    double rawPercentage = ((double) de.totalEmployees() / totalEmployees) * 100;
-                    return new RawEntry(
-                            nameMap.getOrDefault(de.departmentId().toString(), "Unknown Department"),
-                            rawPercentage);
-                }).toList();
-
-        return roundAndAdjust(rawEntries).stream()
-                .map(e -> new DepartmentEmployees(e.name(), e.roundedPercentage()))
-                .toList();
+    if (totalEmployees == 0 || data.isEmpty()) {
+      return data.stream()
+          .map(
+              de ->
+                  new DepartmentEmployees(
+                      nameMap.getOrDefault(de.departmentId().toString(), "Unknown Department"), 0))
+          .toList();
     }
 
-    private List<DepartmentSalary> mapDepartmentSalaries(
-            List<com.antharos.bff.domain.report.DepartmentSalary> data,
-            Map<String, String> nameMap,
-            long totalSalary) {
+    List<RawEntry> rawEntries =
+        data.stream()
+            .map(
+                de -> {
+                  double rawPercentage = ((double) de.totalEmployees() / totalEmployees) * 100;
+                  return new RawEntry(
+                      nameMap.getOrDefault(de.departmentId().toString(), "Unknown Department"),
+                      rawPercentage);
+                })
+            .toList();
 
-        if (totalSalary == 0 || data.isEmpty()) {
-            return data.stream()
-                    .map(ds -> new DepartmentSalary(
-                            nameMap.getOrDefault(ds.departmentId().toString(), "Unknown Department"),
-                            0))
-                    .toList();
-        }
+    return roundAndAdjust(rawEntries).stream()
+        .map(e -> new DepartmentEmployees(e.name(), e.roundedPercentage()))
+        .toList();
+  }
 
-        List<RawEntry> rawEntries = data.stream()
-                .map(ds -> {
-                    double rawPercentage = ((double) ds.totalSalary() / totalSalary) * 100;
-                    return new RawEntry(
-                            nameMap.getOrDefault(ds.departmentId().toString(), "Unknown Department"),
-                            rawPercentage);
-                }).toList();
+  private List<DepartmentSalary> mapDepartmentSalaries(
+      List<com.antharos.bff.domain.report.DepartmentSalary> data,
+      Map<String, String> nameMap,
+      long totalSalary) {
 
-        return roundAndAdjust(rawEntries).stream()
-                .map(e -> new DepartmentSalary(e.name(), e.roundedPercentage()))
-                .toList();
+    if (totalSalary == 0 || data.isEmpty()) {
+      return data.stream()
+          .map(
+              ds ->
+                  new DepartmentSalary(
+                      nameMap.getOrDefault(ds.departmentId().toString(), "Unknown Department"), 0))
+          .toList();
     }
 
-    private List<JobTitleEmployees> mapJobTitles(
-            List<com.antharos.bff.domain.report.JobTitleEmployees> data,
-            Map<String, String> nameMap,
-            long totalJobTitleEmployees) {
+    List<RawEntry> rawEntries =
+        data.stream()
+            .map(
+                ds -> {
+                  double rawPercentage = ((double) ds.totalSalary() / totalSalary) * 100;
+                  return new RawEntry(
+                      nameMap.getOrDefault(ds.departmentId().toString(), "Unknown Department"),
+                      rawPercentage);
+                })
+            .toList();
 
-        if (totalJobTitleEmployees == 0 || data.isEmpty()) {
-            return data.stream()
-                    .map(jt -> new JobTitleEmployees(
-                            nameMap.getOrDefault(jt.jobTitleId().toString(), "Unknown Job Title"),
-                            0))
-                    .toList();
-        }
+    return roundAndAdjust(rawEntries).stream()
+        .map(e -> new DepartmentSalary(e.name(), e.roundedPercentage()))
+        .toList();
+  }
 
-        List<RawEntry> rawEntries = data.stream()
-                .map(jt -> {
-                    double rawPercentage = ((double) jt.totalEmployees() / totalJobTitleEmployees) * 100;
-                    return new RawEntry(
-                            nameMap.getOrDefault(jt.jobTitleId().toString(), "Unknown Job Title"),
-                            rawPercentage);
-                }).toList();
+  private List<JobTitleEmployees> mapJobTitles(
+      List<com.antharos.bff.domain.report.JobTitleEmployees> data,
+      Map<String, String> nameMap,
+      long totalJobTitleEmployees) {
 
-        return roundAndAdjust(rawEntries).stream()
-                .map(e -> new JobTitleEmployees(e.name(), e.roundedPercentage()))
-                .toList();
+    if (totalJobTitleEmployees == 0 || data.isEmpty()) {
+      return data.stream()
+          .map(
+              jt ->
+                  new JobTitleEmployees(
+                      nameMap.getOrDefault(jt.jobTitleId().toString(), "Unknown Job Title"), 0))
+          .toList();
     }
 
-    private record RawEntry(String name, double rawPercentage) {}
-    private record RoundedEntry(String name, int roundedPercentage) {}
+    List<RawEntry> rawEntries =
+        data.stream()
+            .map(
+                jt -> {
+                  double rawPercentage =
+                      ((double) jt.totalEmployees() / totalJobTitleEmployees) * 100;
+                  return new RawEntry(
+                      nameMap.getOrDefault(jt.jobTitleId().toString(), "Unknown Job Title"),
+                      rawPercentage);
+                })
+            .toList();
 
-    private List<RoundedEntry> roundAndAdjust(List<RawEntry> rawEntries) {
-        int totalRounded = 0;
-        List<RoundedEntry> rounded = new ArrayList<>();
-        List<Double> fractions = new ArrayList<>();
+    return roundAndAdjust(rawEntries).stream()
+        .map(e -> new JobTitleEmployees(e.name(), e.roundedPercentage()))
+        .toList();
+  }
 
-        for (RawEntry e : rawEntries) {
-            int roundedValue = (int) Math.floor(e.rawPercentage());
-            rounded.add(new RoundedEntry(e.name(), roundedValue));
-            totalRounded += roundedValue;
-            fractions.add(e.rawPercentage() - roundedValue);
-        }
+  private record RawEntry(String name, double rawPercentage) {}
 
-        int remaining = 100 - totalRounded;
-        while (remaining > 0) {
-            int maxIndex = 0;
-            for (int i = 1; i < fractions.size(); i++) {
-                if (fractions.get(i) > fractions.get(maxIndex)) {
-                    maxIndex = i;
-                }
-            }
-            RoundedEntry r = rounded.get(maxIndex);
-            rounded.set(maxIndex, new RoundedEntry(r.name(), r.roundedPercentage() + 1));
-            fractions.set(maxIndex, 0.0);
-            remaining--;
-        }
+  private record RoundedEntry(String name, int roundedPercentage) {}
 
-        return rounded;
+  private List<RoundedEntry> roundAndAdjust(List<RawEntry> rawEntries) {
+    int totalRounded = 0;
+    List<RoundedEntry> rounded = new ArrayList<>();
+    List<Double> fractions = new ArrayList<>();
+
+    for (RawEntry e : rawEntries) {
+      int roundedValue = (int) Math.floor(e.rawPercentage());
+      rounded.add(new RoundedEntry(e.name(), roundedValue));
+      totalRounded += roundedValue;
+      fractions.add(e.rawPercentage() - roundedValue);
     }
+
+    int remaining = 100 - totalRounded;
+    while (remaining > 0) {
+      int maxIndex = 0;
+      for (int i = 1; i < fractions.size(); i++) {
+        if (fractions.get(i) > fractions.get(maxIndex)) {
+          maxIndex = i;
+        }
+      }
+      RoundedEntry r = rounded.get(maxIndex);
+      rounded.set(maxIndex, new RoundedEntry(r.name(), r.roundedPercentage() + 1));
+      fractions.set(maxIndex, 0.0);
+      remaining--;
+    }
+
+    return rounded;
+  }
 }

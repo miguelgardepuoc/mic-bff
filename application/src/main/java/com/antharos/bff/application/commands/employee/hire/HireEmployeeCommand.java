@@ -9,6 +9,7 @@ import lombok.Value;
 @Builder
 @Value
 public class HireEmployeeCommand {
+  String candidateId;
   String userId;
   String dni;
   String name;

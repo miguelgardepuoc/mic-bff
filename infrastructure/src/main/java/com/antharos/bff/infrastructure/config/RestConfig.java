@@ -1,12 +1,17 @@
 package com.antharos.bff.infrastructure.config;
 
+import com.antharos.bff.domain.globalexceptions.AlreadyExistsException;
+import com.antharos.bff.infrastructure.config.security.jwt.JwtTokenInterceptor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Configuration
 public class RestConfig {
@@ -36,6 +41,7 @@ public class RestConfig {
                 return next.exchange(request);
               }
             })
+        .filter(RestConfig.errorHandlingFilter())
         .build();
   }
 
@@ -55,6 +61,7 @@ public class RestConfig {
                 return next.exchange(request);
               }
             })
+        .filter(RestConfig.errorHandlingFilter())
         .build();
   }
 
@@ -74,6 +81,20 @@ public class RestConfig {
                 return next.exchange(request);
               }
             })
+        .filter(RestConfig.errorHandlingFilter())
         .build();
+  }
+
+  public static ExchangeFilterFunction errorHandlingFilter() {
+    return ExchangeFilterFunction.ofResponseProcessor(
+        clientResponse -> {
+          if (clientResponse.statusCode() == HttpStatus.CONFLICT) {
+            return clientResponse
+                .bodyToMono(String.class)
+                .flatMap(
+                    body -> Mono.error(new AlreadyExistsException("409 from downstream: " + body)));
+          }
+          return Mono.just(clientResponse);
+        });
   }
 }

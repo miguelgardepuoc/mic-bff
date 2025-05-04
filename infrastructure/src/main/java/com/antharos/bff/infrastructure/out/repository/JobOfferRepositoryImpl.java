@@ -9,10 +9,8 @@ import com.antharos.bff.infrastructure.out.repository.model.CandidatesMapper;
 import com.antharos.bff.infrastructure.out.repository.model.FindCandidatesResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 @Component
 public class JobOfferRepositoryImpl implements JobOfferRepository {
@@ -42,22 +40,6 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
         .retrieve()
         .bodyToMono(JobOffer.class)
         .block();
-  }
-
-  @Override
-  public boolean existsByEmail(String personalEmail) {
-    return Boolean.TRUE.equals(
-        jobOfferWebClient
-            .get()
-            .uri("/candidates/email/{email}", personalEmail)
-            .retrieve()
-            .onStatus(
-                HttpStatusCode::is4xxClientError,
-                clientResponse -> Mono.error(new RuntimeException("Not Found")))
-            .bodyToMono(Candidate.class)
-            .map(candidate -> true)
-            .onErrorReturn(false)
-            .block());
   }
 
   @Override
@@ -139,6 +121,16 @@ public class JobOfferRepositoryImpl implements JobOfferRepository {
         .bodyValue(jobOffer)
         .retrieve()
         .toBodilessEntity()
+        .block();
+  }
+
+  @Override
+  public Candidate findCandidateById(String candidateId) {
+    return this.jobOfferWebClient
+        .get()
+        .uri("/candidates/{id}", candidateId)
+        .retrieve()
+        .bodyToMono(Candidate.class)
         .block();
   }
 }

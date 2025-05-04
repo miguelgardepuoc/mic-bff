@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,19 +22,23 @@ public class AzureBlobStorageRepositoryImpl implements BlobRepository {
   @Value("${azure.storage.connection-string}")
   private String connectionString;
 
+  @Value("${azure.storage.container-name}")
+  private String containerName;
+
   @Override
   public String uploadFile(MultipartFile file) throws IOException {
-
     BlobServiceClient blobServiceClient =
         new BlobServiceClientBuilder().connectionString(this.connectionString).buildClient();
 
-    BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient("cvs");
+    BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
     if (!containerClient.exists()) {
       containerClient.create();
     }
 
-    BlobClient blobClient =
-        containerClient.getBlobClient(Objects.requireNonNull(file.getOriginalFilename()));
+    String originalFilename = Objects.requireNonNull(file.getOriginalFilename());
+    String uniqueFileName = UUID.randomUUID() + "_" + originalFilename;
+
+    BlobClient blobClient = containerClient.getBlobClient(uniqueFileName);
     blobClient.upload(file.getInputStream(), file.getSize(), true);
 
     return blobClient.getBlobName();

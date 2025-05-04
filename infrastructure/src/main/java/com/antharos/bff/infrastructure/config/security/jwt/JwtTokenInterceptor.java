@@ -1,4 +1,4 @@
-package com.antharos.bff.infrastructure.config;
+package com.antharos.bff.infrastructure.config.security.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

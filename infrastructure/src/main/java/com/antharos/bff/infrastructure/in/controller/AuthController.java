@@ -4,9 +4,9 @@ import com.antharos.bff.application.commands.login.LoginCommand;
 import com.antharos.bff.application.commands.login.LoginCommandHandler;
 import com.antharos.bff.application.commands.signup.SignUpCommand;
 import com.antharos.bff.application.commands.signup.SignUpCommandHandler;
-import com.antharos.bff.domain.login.Login;
+import com.antharos.bff.domain.employee.Employee;
+import com.antharos.bff.infrastructure.config.security.jwt.JwtService;
 import com.antharos.bff.infrastructure.in.dto.employee.RegisterUserRequest;
-import com.antharos.bff.infrastructure.in.dto.login.LoginMapper;
 import com.antharos.bff.infrastructure.in.dto.login.LoginRequest;
 import com.antharos.bff.infrastructure.in.dto.login.LoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class AuthController {
 
   private final LoginCommandHandler loginCommandHandler;
   private final SignUpCommandHandler signUpCommandHandler;
-  private final LoginMapper loginMapper;
+  private final JwtService jwtService;
 
   @PostMapping("/signup")
   public ResponseEntity<Void> register(@RequestBody RegisterUserRequest request) {
@@ -43,7 +43,13 @@ public class AuthController {
             .username(request.getUsername())
             .password(request.getPassword())
             .build();
-    final Login login = this.loginCommandHandler.handle(command);
-    return ResponseEntity.ok(this.loginMapper.toLoginResponse(login));
+
+    final Employee authenticatedEmployee = this.loginCommandHandler.handle(command);
+
+    final String jwtToken = this.jwtService.generateToken(authenticatedEmployee);
+
+    final LoginResponse loginResponse =
+        new LoginResponse(jwtToken, this.jwtService.getExpirationTime());
+    return ResponseEntity.ok(loginResponse);
   }
 }

@@ -3,8 +3,8 @@ package com.antharos.bff.domain.repository;
 import com.antharos.bff.domain.department.Department;
 import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
-import com.antharos.bff.domain.login.Login;
 import java.util.List;
+import java.util.Optional;
 
 public interface CorporateOrganizationRepository {
 
@@ -13,8 +13,6 @@ public interface CorporateOrganizationRepository {
   List<JobTitle> findJobTitles();
 
   void signUp(String username, String password);
-
-  Login login(String username, String password);
 
   List<Department> findAll();
 
@@ -31,4 +29,6 @@ public interface CorporateOrganizationRepository {
   void putEmployeeOnLeave(String userId);
 
   void markEmployeeAsInactive(String userId);
+
+  Optional<Employee> findByUsername(String username);
 }

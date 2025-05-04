@@ -12,4 +12,5 @@ public class Candidate {
   private String fullName;
   private CandidateStatus status;
   private String cvFilename;
+  private UUID jobOfferId;
 }
