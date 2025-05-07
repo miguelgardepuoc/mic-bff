@@ -6,6 +6,8 @@ import com.antharos.bff.application.model.DepartmentSalary;
 import com.antharos.bff.application.model.JobTitleEmployees;
 import com.antharos.bff.domain.department.Department;
 import com.antharos.bff.domain.jobtitle.JobTitle;
+import com.antharos.bff.domain.report.MonthlyEmployeeCount;
+import com.antharos.bff.domain.report.MonthlySalaryCost;
 import com.antharos.bff.domain.repository.AnalyticsRepository;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
 import java.util.ArrayList;
@@ -27,7 +29,35 @@ public class GetDashboardDataHandler {
 
   @Async
   public CompletableFuture<List<Department>> findDepartments() {
-    return CompletableFuture.completedFuture(corporateOrganizationRepository.findAll());
+    return CompletableFuture.completedFuture(this.corporateOrganizationRepository.findAll());
+  }
+
+  @Async
+  public CompletableFuture<List<MonthlySalaryCost>> findSalaryCosts() {
+    return CompletableFuture.completedFuture(this.analyticsRepository.getSalaryByMonth());
+  }
+
+  @Async
+  public CompletableFuture<List<MonthlyEmployeeCount>> findEmployeeCounts() {
+    return CompletableFuture.completedFuture(this.analyticsRepository.getEmployeesByMonth());
+  }
+
+  @Async
+  public CompletableFuture<List<com.antharos.bff.domain.report.DepartmentEmployees>>
+      findDeptEmployees() {
+    return CompletableFuture.completedFuture(this.analyticsRepository.getEmployeesByDepartment());
+  }
+
+  @Async
+  public CompletableFuture<List<com.antharos.bff.domain.report.DepartmentSalary>>
+      findDeptSalaries() {
+    return CompletableFuture.completedFuture(this.analyticsRepository.getSalaryByDepartment());
+  }
+
+  @Async
+  public CompletableFuture<List<com.antharos.bff.domain.report.JobTitleEmployees>>
+      findJobTitleEmployees() {
+    return CompletableFuture.completedFuture(this.analyticsRepository.getEmployeesByJobTitle());
   }
 
   public DashboardData handle(GetDashboardDataQuery query) {
@@ -36,20 +66,11 @@ public class GetDashboardDataHandler {
       var jobTitlesFuture =
           CompletableFuture.supplyAsync(
               corporateOrganizationRepository::findJobTitles, dashboardExecutor);
-      var employeeCounts =
-          CompletableFuture.supplyAsync(
-              analyticsRepository::getEmployeesByMonth, dashboardExecutor);
-      var salaryCosts =
-          CompletableFuture.supplyAsync(analyticsRepository::getSalaryByMonth, dashboardExecutor);
-      var deptEmployees =
-          CompletableFuture.supplyAsync(
-              analyticsRepository::getEmployeesByDepartment, dashboardExecutor);
-      var deptSalaries =
-          CompletableFuture.supplyAsync(
-              analyticsRepository::getSalaryByDepartment, dashboardExecutor);
-      var jobTitleEmployees =
-          CompletableFuture.supplyAsync(
-              analyticsRepository::getEmployeesByJobTitle, dashboardExecutor);
+      var employeeCounts = findEmployeeCounts();
+      var salaryCosts = findSalaryCosts();
+      var deptEmployees = findDeptEmployees();
+      var deptSalaries = findDeptSalaries();
+      var jobTitleEmployees = findJobTitleEmployees();
 
       CompletableFuture.allOf(
               employeeCounts, salaryCosts, deptEmployees, deptSalaries, jobTitleEmployees)

@@ -35,4 +35,11 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleHiringValidation(HiringValidationException ex) {
     return ResponseEntity.badRequest().body(ex.getErrorResponse());
   }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+    log.error("Unexpected runtime exception: ", ex);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body("An unexpected error occurred: " + ex.getMessage());
+  }
 }

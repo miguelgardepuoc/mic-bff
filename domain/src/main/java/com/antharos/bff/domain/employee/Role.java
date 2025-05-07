@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum Role {
-  COMPANY_MANAGEMENT("Dirección de la empresa"),
-  DEPARTMENT_HEAD("Responsable de departamento"),
-  EMPLOYEE("Empleado");
+  ROLE_COMPANY_MANAGEMENT("Dirección de la empresa"),
+  ROLE_DEPARTMENT_HEAD("Responsable de departamento"),
+  ROLE_EMPLOYEE("Empleado");
 
   private final String description;
 

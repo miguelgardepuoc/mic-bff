@@ -9,6 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Department {
   private String id;
-
   private String description;
+  private String departmentHeadUserId;
 }

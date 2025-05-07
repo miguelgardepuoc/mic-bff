@@ -31,4 +31,6 @@ public interface CorporateOrganizationRepository {
   void markEmployeeAsInactive(String userId);
 
   Optional<Employee> findByUsername(String username);
+
+  Optional<Employee> findByUserId(String departmentHeadUserId);
 }

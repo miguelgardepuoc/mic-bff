@@ -3,11 +3,9 @@ package com.antharos.bff.infrastructure.out.repository;
 import com.antharos.bff.domain.department.Department;
 import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
-import com.antharos.bff.domain.login.Login;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
 import com.antharos.bff.infrastructure.in.util.ErrorResponse;
 import com.antharos.bff.infrastructure.out.repository.exception.HiringValidationException;
-import com.antharos.bff.infrastructure.out.repository.model.LoginRequest;
 import com.antharos.bff.infrastructure.out.repository.model.RegisterUserRequest;
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +103,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
     corporateWebClient
         .patch()
         .uri("/departments/{id}/renaming", departmentId)
-        .bodyValue(new Department(departmentId, description))
+        .bodyValue(new Department(departmentId, description, null))
         .retrieve()
         .toBodilessEntity()
         .block();
@@ -116,7 +114,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
     corporateWebClient
         .post()
         .uri("/departments")
-        .bodyValue(new Department(id, description))
+        .bodyValue(new Department(id, description, null))
         .retrieve()
         .toBodilessEntity()
         .block();
@@ -174,6 +172,31 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
       return Optional.ofNullable(employee);
     } catch (Exception e) {
       throw new RuntimeException("Error retrieving employee by username", e);
+    }
+  }
+
+  @Override
+  public Optional<Employee> findByUserId(String employeeId) {
+    try {
+      Employee employee =
+          this.corporateWebClient
+              .get()
+              .uri("/employees/{employeeId}", employeeId)
+              .retrieve()
+              .onStatus(
+                  HttpStatusCode::is4xxClientError,
+                  response -> {
+                    if (response.statusCode() == HttpStatus.NOT_FOUND) {
+                      return Mono.empty();
+                    }
+                    return response.createException();
+                  })
+              .bodyToMono(Employee.class)
+              .block();
+
+      return Optional.ofNullable(employee);
+    } catch (Exception e) {
+      throw new RuntimeException("Error retrieving employee by employeeId", e);
     }
   }
 }

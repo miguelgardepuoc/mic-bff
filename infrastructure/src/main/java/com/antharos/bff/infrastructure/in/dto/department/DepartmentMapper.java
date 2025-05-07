@@ -1,6 +1,6 @@
 package com.antharos.bff.infrastructure.in.dto.department;
 
-import com.antharos.bff.domain.department.Department;
+import com.antharos.bff.application.model.Department;
 import java.util.List;
 import org.mapstruct.Mapper;
 
