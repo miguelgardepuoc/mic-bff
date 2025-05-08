@@ -10,26 +10,25 @@ import org.springframework.stereotype.Service;
 public class FindDepartmentsQueryHandler {
   private final CorporateOrganizationRepository corporateOrganizationRepository;
 
-    public List<com.antharos.bff.application.model.Department> handle() {
-        var departments = corporateOrganizationRepository.findAll();
+  public List<com.antharos.bff.application.model.Department> handle() {
+    var departments = corporateOrganizationRepository.findAll();
 
-        return departments.stream()
-                .map(department -> {
-                    String departmentHeadName = "Unknown";
+    return departments.stream()
+        .map(
+            department -> {
+              String departmentHeadName = "-";
 
-                    if (department.getDepartmentHeadUserId() != null) {
-                        var employeeOpt = corporateOrganizationRepository.findByUserId(department.getDepartmentHeadUserId());
-                        departmentHeadName = employeeOpt
-                                .map(e -> e.name() + " " + e.surname())
-                                .orElse("Unknown");
-                    }
+              if (department.getDepartmentHeadUserId() != null) {
+                var employeeOpt =
+                    corporateOrganizationRepository.findByUserId(
+                        department.getDepartmentHeadUserId());
+                departmentHeadName =
+                    employeeOpt.map(e -> e.name() + " " + e.surname()).orElse("Unknown");
+              }
 
-                    return new com.antharos.bff.application.model.Department(
-                            department.getId(),
-                            department.getDescription(),
-                            departmentHeadName
-                    );
-                })
-                .toList();
-    }
+              return new com.antharos.bff.application.model.Department(
+                  department.getId(), department.getDescription(), departmentHeadName);
+            })
+        .toList();
+  }
 }

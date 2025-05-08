@@ -3,6 +3,7 @@ package com.antharos.bff.infrastructure.in.util;
 import com.antharos.bff.domain.candidate.CandidateAlreadyRegisteredException;
 import com.antharos.bff.domain.globalexceptions.AlreadyExistsException;
 import com.antharos.bff.domain.globalexceptions.NotFoundException;
+import com.antharos.bff.infrastructure.out.repository.exception.DepartmentHeadAssignationException;
 import com.antharos.bff.infrastructure.out.repository.exception.HiringValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,12 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HiringValidationException.class)
   public ResponseEntity<ErrorResponse> handleHiringValidation(HiringValidationException ex) {
     return ResponseEntity.badRequest().body(ex.getErrorResponse());
+  }
+
+  @ExceptionHandler(DepartmentHeadAssignationException.class)
+  public ResponseEntity<ErrorResponse> handleDepartmentHeadAssignationException(
+      DepartmentHeadAssignationException ex) {
+    return ResponseEntity.unprocessableEntity().body(ex.getErrorResponse());
   }
 
   @ExceptionHandler(RuntimeException.class)

@@ -33,4 +33,6 @@ public interface CorporateOrganizationRepository {
   Optional<Employee> findByUsername(String username);
 
   Optional<Employee> findByUserId(String departmentHeadUserId);
+
+  void updateDepartmentHead(String id, String username);
 }

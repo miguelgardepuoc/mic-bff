@@ -6,11 +6,10 @@ import com.antharos.bff.application.commands.department.DisableDepartmentCommand
 import com.antharos.bff.application.commands.department.DisableDepartmentCommandHandler;
 import com.antharos.bff.application.commands.department.RenameDepartmentCommand;
 import com.antharos.bff.application.commands.department.RenameDepartmentCommandHandler;
+import com.antharos.bff.application.commands.department.headedit.EditHeadDepartmentCommand;
+import com.antharos.bff.application.commands.department.headedit.EditHeadDepartmentCommandHandler;
 import com.antharos.bff.application.queries.department.FindDepartmentsQueryHandler;
-import com.antharos.bff.infrastructure.in.dto.department.CreateDepartmentRequest;
-import com.antharos.bff.infrastructure.in.dto.department.DepartmentMapper;
-import com.antharos.bff.infrastructure.in.dto.department.DepartmentResponse;
-import com.antharos.bff.infrastructure.in.dto.department.RenameDepartmentRequest;
+import com.antharos.bff.infrastructure.in.dto.department.*;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,7 @@ public class DepartmentController {
   private final RenameDepartmentCommandHandler renameDepartmentCommandHandler;
   private final DisableDepartmentCommandHandler disableDepartmentCommandHandler;
   private final CreateDepartmentCommandHandler createDepartmentCommandHandler;
+  private final EditHeadDepartmentCommandHandler editHeadDepartmentCommandHandler;
   private final DepartmentMapper departmentMapper;
 
   @GetMapping
@@ -63,5 +63,15 @@ public class DepartmentController {
 
     this.createDepartmentCommandHandler.doHandle(command);
     return new ResponseEntity<>(HttpStatus.CREATED);
+  }
+
+  @PutMapping("/{id}/head")
+  public ResponseEntity<Void> updateDepartmentHead(
+      @PathVariable String id, @RequestBody UpdateDepartmentHeadRequest request) {
+    EditHeadDepartmentCommand command =
+        EditHeadDepartmentCommand.builder().id(id).username(request.username()).build();
+
+    this.editHeadDepartmentCommandHandler.handle(command);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
