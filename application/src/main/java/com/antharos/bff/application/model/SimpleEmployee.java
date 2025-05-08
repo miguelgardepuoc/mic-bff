@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public record SimpleEmployee(
     String id,
     Long employeeNumber,
+    String username,
     String fullName,
     BigDecimal salary,
     String dni,

@@ -20,5 +20,4 @@ public class HireEmployeeCommand {
   LocalDate hiringDate;
   Role role;
   String jobTitleId;
-  String createdBy;
 }

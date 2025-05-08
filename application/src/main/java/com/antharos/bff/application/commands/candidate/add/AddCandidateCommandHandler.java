@@ -1,6 +1,6 @@
 package com.antharos.bff.application.commands.candidate.add;
 
-import com.antharos.bff.domain.joboffer.JobOfferNotFound;
+import com.antharos.bff.domain.joboffer.JobOfferNotFoundException;
 import com.antharos.bff.domain.repository.BlobRepository;
 import com.antharos.bff.domain.repository.JobOfferRepository;
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class AddCandidateCommandHandler {
 
   public void doHandle(final AddCandidateCommand command) throws IOException {
     if (this.jobOfferRepository.findById(command.getJobOfferId()) == null) {
-      throw new JobOfferNotFound(command.getJobOfferId());
+      throw new JobOfferNotFoundException(command.getJobOfferId());
     }
     final String cvFilename = this.blobRepository.uploadFile(command.getCv());
     this.jobOfferRepository.addCandidate(

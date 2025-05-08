@@ -27,6 +27,7 @@
         <module>application</module>
         <module>infrastructure</module>
         <module>boot</module>
+        <module>aggregate-report</module>
     </modules>
 
     <properties>
@@ -94,11 +95,11 @@
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${org.mapstruct.version}</version>
             </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-storage-blob</artifactId>
-            <version>${azure.storage.blob.version}</version>
-        </dependency>
+            <dependency>
+                <groupId>com.azure</groupId>
+                <artifactId>azure-storage-blob</artifactId>
+                <version>${azure.storage.blob.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -129,12 +130,24 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <annotationProcessorPath>
                             <groupId>org.mapstruct</groupId>
@@ -176,37 +189,10 @@
     </build>
 
     <profiles>
-        <!-- Use this profile to measure the code coverage with JaCoCo -->
-        <profile>
-            <id>test-coverage</id>
-            <build>
-                <plugins>
-                    <!-- Measure code coverage with JaCoCo -->
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${jacoco.maven.plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <!-- Do not create a report for every single module.
-                                 Instead, we'll create an *aggregated* report in the "boot" module. -->
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- Use this profile to run a static code analysis with Checkstyle -->
         <profile>
             <id>code-analysis</id>
             <build>
                 <plugins>
-                    <!-- Validate code style with Checkstyle -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>

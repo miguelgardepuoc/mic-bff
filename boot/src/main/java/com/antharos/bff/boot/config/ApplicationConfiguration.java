@@ -1,4 +1,4 @@
-package com.antharos.bff.boot;
+package com.antharos.bff.boot.config;
 
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
 import lombok.AllArgsConstructor;

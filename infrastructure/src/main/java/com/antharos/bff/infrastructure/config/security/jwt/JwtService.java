@@ -7,9 +7,12 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +85,11 @@ public class JwtService {
   private Key getSignInKey() {
     byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
+  }
+
+  public List<GrantedAuthority> extractRoles(String token) {
+    Claims claims = extractAllClaims(token);
+    String role = claims.get("role", String.class);
+    return List.of(new SimpleGrantedAuthority(role));
   }
 }

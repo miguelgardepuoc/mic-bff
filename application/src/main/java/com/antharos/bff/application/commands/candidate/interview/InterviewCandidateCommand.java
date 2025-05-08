@@ -7,5 +7,4 @@ import lombok.Value;
 @Value
 public class InterviewCandidateCommand {
   String candidateId;
-  String byUser;
 }

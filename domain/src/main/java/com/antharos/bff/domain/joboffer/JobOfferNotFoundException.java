@@ -2,8 +2,8 @@ package com.antharos.bff.domain.joboffer;
 
 import com.antharos.bff.domain.globalexceptions.NotFoundException;
 
-public class JobOfferNotFound extends NotFoundException {
-  public JobOfferNotFound(String message) {
+public class JobOfferNotFoundException extends NotFoundException {
+  public JobOfferNotFoundException(String message) {
     super(message);
   }
 }

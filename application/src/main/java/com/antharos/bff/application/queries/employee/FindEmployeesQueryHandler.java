@@ -35,6 +35,7 @@ public class FindEmployeesQueryHandler {
                 new SimpleEmployee(
                     emp.id(),
                     emp.employeeNumber(),
+                    emp.username(),
                     emp.name() + " " + emp.surname(),
                     emp.salary(),
                     emp.dni(),

@@ -5,10 +5,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,17 +50,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             .write("{\"error\":\"session_expired\",\"message\":\"Session expired\"}");
         return;
       }
-      final String userEmail = this.jwtService.extractUsername(jwt);
+      final String username = this.jwtService.extractUsername(jwt);
+      List<GrantedAuthority> authorities = this.jwtService.extractRoles(jwt);
 
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-      if (userEmail != null && authentication == null) {
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+      if (username != null) {
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
         if (this.jwtService.isTokenValid(jwt, userDetails)) {
           UsernamePasswordAuthenticationToken authToken =
-              new UsernamePasswordAuthenticationToken(
-                  userDetails, null, userDetails.getAuthorities());
+              new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
 
           authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           SecurityContextHolder.getContext().setAuthentication(authToken);

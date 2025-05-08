@@ -7,5 +7,4 @@ import lombok.Value;
 @Value
 public class RejectCandidateCommand {
   String candidateId;
-  String byUser;
 }

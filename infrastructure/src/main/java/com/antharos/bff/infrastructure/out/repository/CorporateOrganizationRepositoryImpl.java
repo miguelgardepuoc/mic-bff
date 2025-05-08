@@ -5,8 +5,10 @@ import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
 import com.antharos.bff.infrastructure.in.util.ErrorResponse;
+import com.antharos.bff.infrastructure.out.repository.exception.DepartmentHeadAssignationException;
 import com.antharos.bff.infrastructure.out.repository.exception.HiringValidationException;
 import com.antharos.bff.infrastructure.out.repository.model.RegisterUserRequest;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -181,7 +183,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
       Employee employee =
           this.corporateWebClient
               .get()
-              .uri("/employees/{employeeId}", employeeId)
+              .uri("/employees/{id}", employeeId)
               .retrieve()
               .onStatus(
                   HttpStatusCode::is4xxClientError,
@@ -196,7 +198,26 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
       return Optional.ofNullable(employee);
     } catch (Exception e) {
-      throw new RuntimeException("Error retrieving employee by employeeId", e);
+      throw new RuntimeException("Error retrieving employee by id", e);
     }
+  }
+
+  @Override
+  public void updateDepartmentHead(String id, String username) {
+    this.corporateWebClient
+        .put()
+        .uri("/departments/{id}/head", id)
+        .bodyValue(Collections.singletonMap("username", username))
+        .retrieve()
+        .onStatus(
+            HttpStatusCode::is4xxClientError,
+            response ->
+                response
+                    .bodyToMono(ErrorResponse.class)
+                    .flatMap(
+                        errorResponse ->
+                            Mono.error(new DepartmentHeadAssignationException(errorResponse))))
+        .toBodilessEntity()
+        .block();
   }
 }
