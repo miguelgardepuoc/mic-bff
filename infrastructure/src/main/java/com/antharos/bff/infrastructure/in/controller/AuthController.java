@@ -36,20 +36,20 @@ public class AuthController {
   @PermitAll
   @PostMapping("/signup")
   @Operation(
-          summary = "Register a new user",
-          description = "Allows a new user to sign up by providing username and password.")
+      summary = "Register a new user",
+      description = "Allows a new user to sign up by providing username and password.")
   @ApiResponses(
-          value = {
-                  @ApiResponse(responseCode = "200", description = "User registered successfully"),
-                  @ApiResponse(
-                          responseCode = "400",
-                          description = "Invalid request",
-                          content = @Content(schema = @Schema())),
-                  @ApiResponse(
-                          responseCode = "500",
-                          description = "Internal server error",
-                          content = @Content(schema = @Schema()))
-          })
+      value = {
+        @ApiResponse(responseCode = "200", description = "User registered successfully"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid request",
+            content = @Content(schema = @Schema())),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error",
+            content = @Content(schema = @Schema()))
+      })
   public ResponseEntity<Void> register(@RequestBody RegisterUserRequest request) {
     final SignUpCommand command =
         SignUpCommand.builder()
@@ -63,32 +63,34 @@ public class AuthController {
   @PermitAll
   @PostMapping("/login")
   @Operation(
-          summary = "Login",
-          description = "Authenticates a user and returns a JWT token for authorized access"
-  )
+      summary = "Login",
+      description = "Authenticates a user and returns a JWT token for authorized access")
   @ApiResponses({
-          @ApiResponse(responseCode = "200", description = "Login successful",
-                  content = @Content(mediaType = "application/json",
-                          schema = @Schema(implementation = LoginResponse.class))),
-          @ApiResponse(responseCode = "401", description = "Unauthorized - invalid credentials"),
-          @ApiResponse(responseCode = "400", description = "Bad request - malformed input"),
-          @ApiResponse(responseCode = "500", description = "Internal server error")
+    @ApiResponse(
+        responseCode = "200",
+        description = "Login successful",
+        content =
+            @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = LoginResponse.class))),
+    @ApiResponse(responseCode = "401", description = "Unauthorized - invalid credentials"),
+    @ApiResponse(responseCode = "400", description = "Bad request - malformed input"),
+    @ApiResponse(responseCode = "500", description = "Internal server error")
   })
   public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
     final LoginCommand command =
-            LoginCommand.builder()
-                    .username(request.getUsername())
-                    .password(request.getPassword())
-                    .build();
+        LoginCommand.builder()
+            .username(request.getUsername())
+            .password(request.getPassword())
+            .build();
 
     final Employee authenticatedEmployee = this.loginCommandHandler.handle(command);
 
     final String jwtToken = this.jwtService.generateToken(authenticatedEmployee);
 
     final LoginResponse loginResponse =
-            new LoginResponse(jwtToken, this.jwtService.getExpirationTime());
+        new LoginResponse(jwtToken, this.jwtService.getExpirationTime());
 
     return ResponseEntity.ok(loginResponse);
   }
-
 }

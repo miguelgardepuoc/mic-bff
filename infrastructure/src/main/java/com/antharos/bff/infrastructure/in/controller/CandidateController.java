@@ -49,8 +49,8 @@ public class CandidateController {
   @PermitAll
   @PostMapping
   @Operation(
-          summary = "Add a new candidate",
-          description = "Registers a new candidate for a job offer")
+      summary = "Add a new candidate",
+      description = "Registers a new candidate for a job offer")
   @ApiResponse(responseCode = "201", description = "Candidate successfully added")
   public ResponseEntity<Void> addCandidate(
       @RequestParam String id,
@@ -73,17 +73,17 @@ public class CandidateController {
   @ManagementOnly
   @GetMapping
   @Operation(
-          summary = "Get candidates by job offer",
-          description = "List all candidates who applied to a given job offer")
+      summary = "Get candidates by job offer",
+      description = "List all candidates who applied to a given job offer")
   @ApiResponses({
-          @ApiResponse(
-                  responseCode = "200",
-                  description = "Candidates found",
-                  content =
-                  @Content(
-                          mediaType = "application/json",
-                          schema = @Schema(implementation = SimpleCandidateResponse.class))),
-          @ApiResponse(responseCode = "204", description = "No candidates found")
+    @ApiResponse(
+        responseCode = "200",
+        description = "Candidates found",
+        content =
+            @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = SimpleCandidateResponse.class))),
+    @ApiResponse(responseCode = "204", description = "No candidates found")
   })
   public ResponseEntity<List<SimpleCandidateResponse>> findByJobOfferId(
       @RequestParam String jobOfferId) {
@@ -101,8 +101,8 @@ public class CandidateController {
   @ManagementOnly
   @PatchMapping("/{candidateId}/reject")
   @Operation(
-          summary = "Reject candidate",
-          description = "Rejects a candidate from a job offer process")
+      summary = "Reject candidate",
+      description = "Rejects a candidate from a job offer process")
   @ApiResponse(responseCode = "200", description = "Candidate rejected successfully")
   public ResponseEntity<Void> rejectCandidate(@PathVariable String candidateId) {
     this.rejectCandidateCommandHandler.doHandle(
@@ -133,21 +133,28 @@ public class CandidateController {
   @ManagementOnly
   @GetMapping("/sas-url")
   @Operation(
-          summary = "Get SAS URL",
-          description = "Generates a secure Azure Blob Storage SAS URL for the given file"
-  )
+      summary = "Get SAS URL",
+      description = "Generates a secure Azure Blob Storage SAS URL for the given file")
   @ApiResponses({
-          @ApiResponse(responseCode = "200", description = "SAS URL generated successfully",
-                  content = @Content(mediaType = "application/json",
-                          schema = @Schema(example = "{\"url\": \"https://storageaccount.blob.core.windows.net/...\"}"))),
-          @ApiResponse(responseCode = "400", description = "Bad request - missing or invalid filename"),
-          @ApiResponse(responseCode = "500", description = "Internal server error")
+    @ApiResponse(
+        responseCode = "200",
+        description = "SAS URL generated successfully",
+        content =
+            @Content(
+                mediaType = "application/json",
+                schema =
+                    @Schema(
+                        example =
+                            "{\"url\": \"https://storageaccount.blob.core.windows.net/...\"}"))),
+    @ApiResponse(responseCode = "400", description = "Bad request - missing or invalid filename"),
+    @ApiResponse(responseCode = "500", description = "Internal server error")
   })
   public ResponseEntity<Map<String, String>> getSasUrl(
-          @RequestParam
-          @Parameter(description = "The name of the file to generate the SAS URL for", required = true)
-          String filename
-  ) {
+      @RequestParam
+          @Parameter(
+              description = "The name of the file to generate the SAS URL for",
+              required = true)
+          String filename) {
     String sasUrl = this.findSasUrlQueryHandler.handle(FindSasUrlQuery.of(filename));
     return ResponseEntity.ok(Map.of("url", sasUrl));
   }

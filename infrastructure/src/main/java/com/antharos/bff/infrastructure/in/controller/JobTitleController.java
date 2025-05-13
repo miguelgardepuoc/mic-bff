@@ -28,18 +28,18 @@ public class JobTitleController {
   @PermitAll
   @GetMapping
   @Operation(
-          summary = "List all job titles",
-          description = "Retrieves a list of available job titles")
+      summary = "List all job titles",
+      description = "Retrieves a list of available job titles")
   @ApiResponses(
-          value = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          description = "Successfully retrieved list",
-                          content =
-                          @Content(
-                                  mediaType = "application/json",
-                                  schema = @Schema(implementation = JobTitleResponse.class)))
-          })
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successfully retrieved list",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = JobTitleResponse.class)))
+      })
   public ResponseEntity<List<JobTitleResponse>> findJobTitles() {
     return ResponseEntity.ok(
         this.jobTitleMapper.toJobTitleResponse(

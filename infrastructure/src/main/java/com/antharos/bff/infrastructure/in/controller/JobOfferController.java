@@ -42,15 +42,15 @@ public class JobOfferController {
   @PermitAll
   @GetMapping
   @Operation(
-          summary = "Get all job offers",
-          description = "Retrieves a list of all active job offers")
+      summary = "Get all job offers",
+      description = "Retrieves a list of all active job offers")
   @ApiResponse(
-          responseCode = "200",
-          description = "Successful operation",
-          content =
+      responseCode = "200",
+      description = "Successful operation",
+      content =
           @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = SimpleJobOfferResponse.class)))
+              mediaType = "application/json",
+              schema = @Schema(implementation = SimpleJobOfferResponse.class)))
   public ResponseEntity<List<SimpleJobOfferResponse>> findJobOffers() {
     return ResponseEntity.ok(
         this.mapper.toSimpleJobOffers(this.findJobOffersQueryHandler.handle().stream().toList()));
@@ -59,17 +59,17 @@ public class JobOfferController {
   @PermitAll
   @GetMapping("/{jobOfferId}")
   @Operation(
-          summary = "Get job offer details",
-          description = "Retrieve full details of a specific job offer by ID")
+      summary = "Get job offer details",
+      description = "Retrieve full details of a specific job offer by ID")
   @ApiResponses({
-          @ApiResponse(
-                  responseCode = "200",
-                  description = "Job offer found",
-                  content =
-                  @Content(
-                          mediaType = "application/json",
-                          schema = @Schema(implementation = JobOfferResponse.class))),
-          @ApiResponse(responseCode = "404", description = "Job offer not found")
+    @ApiResponse(
+        responseCode = "200",
+        description = "Job offer found",
+        content =
+            @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = JobOfferResponse.class))),
+    @ApiResponse(responseCode = "404", description = "Job offer not found")
   })
   public ResponseEntity<JobOfferResponse> findJobOfferDetail(@PathVariable String jobOfferId) {
     return this.findJobOfferQueryHandler
@@ -82,8 +82,8 @@ public class JobOfferController {
   @ManagementOnly
   @PostMapping
   @Operation(
-          summary = "Add a new job offer",
-          description = "Creates a new job offer with the provided details")
+      summary = "Add a new job offer",
+      description = "Creates a new job offer with the provided details")
   @ApiResponse(responseCode = "201", description = "Job offer created successfully")
   public ResponseEntity<Void> addJobOffer(@RequestBody AddJobOfferRequest request) {
     AddJobOfferCommand command =
@@ -124,8 +124,8 @@ public class JobOfferController {
   @DeleteMapping("/{jobOfferId}")
   @Operation(summary = "Withdraw a job offer", description = "Marks a job offer as withdrawn by ID")
   @ApiResponses({
-          @ApiResponse(responseCode = "200", description = "Job offer withdrawn successfully"),
-          @ApiResponse(responseCode = "404", description = "Job offer not found")
+    @ApiResponse(responseCode = "200", description = "Job offer withdrawn successfully"),
+    @ApiResponse(responseCode = "404", description = "Job offer not found")
   })
   public ResponseEntity<Void> withdrawJobOffer(@PathVariable String jobOfferId) {
     WithdrawJobOfferCommand command = WithdrawJobOfferCommand.builder().id(jobOfferId).build();
