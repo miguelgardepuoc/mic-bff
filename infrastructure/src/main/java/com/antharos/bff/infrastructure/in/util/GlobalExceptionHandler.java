@@ -3,6 +3,7 @@ package com.antharos.bff.infrastructure.in.util;
 import com.antharos.bff.domain.candidate.CandidateAlreadyRegisteredException;
 import com.antharos.bff.domain.globalexceptions.AlreadyExistsException;
 import com.antharos.bff.domain.globalexceptions.NotFoundException;
+import com.antharos.bff.infrastructure.out.repository.exception.DepartmentHasActiveEmployeesException;
 import com.antharos.bff.infrastructure.out.repository.exception.DepartmentHeadAssignationException;
 import com.antharos.bff.infrastructure.out.repository.exception.HiringValidationException;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,12 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(DepartmentHeadAssignationException.class)
   public ResponseEntity<ErrorResponse> handleDepartmentHeadAssignationException(
       DepartmentHeadAssignationException ex) {
+    return ResponseEntity.unprocessableEntity().body(ex.getErrorResponse());
+  }
+
+  @ExceptionHandler(DepartmentHasActiveEmployeesException.class)
+  public ResponseEntity<ErrorResponse> handleDepartmentHasActiveEmployeesException(
+      DepartmentHasActiveEmployeesException ex) {
     return ResponseEntity.unprocessableEntity().body(ex.getErrorResponse());
   }
 

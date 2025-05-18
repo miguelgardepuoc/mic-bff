@@ -5,6 +5,8 @@ import com.antharos.bff.domain.employee.Employee;
 import com.antharos.bff.domain.jobtitle.JobTitle;
 import com.antharos.bff.domain.repository.CorporateOrganizationRepository;
 import com.antharos.bff.infrastructure.in.util.ErrorResponse;
+import com.antharos.bff.infrastructure.in.util.FieldError;
+import com.antharos.bff.infrastructure.out.repository.exception.DepartmentHasActiveEmployeesException;
 import com.antharos.bff.infrastructure.out.repository.exception.DepartmentHeadAssignationException;
 import com.antharos.bff.infrastructure.out.repository.exception.HiringValidationException;
 import com.antharos.bff.infrastructure.out.repository.model.RegisterUserRequest;
@@ -48,7 +50,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public List<JobTitle> findJobTitles() {
-    return corporateWebClient
+    return this.corporateWebClient
         .get()
         .uri("/job-titles")
         .retrieve()
@@ -59,7 +61,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public void signUp(String username, String password) {
-    corporateWebClient
+    this.corporateWebClient
         .post()
         .uri("/auth/signup")
         .bodyValue(new RegisterUserRequest(username, password))
@@ -70,7 +72,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public List<Department> findAll() {
-    return corporateWebClient
+    return this.corporateWebClient
         .get()
         .uri("/departments")
         .retrieve()
@@ -81,7 +83,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public List<Employee> findAllEmployees() {
-    return corporateWebClient
+    return this.corporateWebClient
         .get()
         .uri("/employees")
         .retrieve()
@@ -92,17 +94,25 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public void disableDepartment(String departmentId) {
-    corporateWebClient
+    this.corporateWebClient
         .delete()
         .uri("/departments/{id}", departmentId)
         .retrieve()
+        .onStatus(
+            HttpStatusCode::is4xxClientError,
+            response ->
+                response
+                    .bodyToMono(ErrorResponse.class)
+                    .flatMap(
+                        errorResponse ->
+                            Mono.error(new DepartmentHasActiveEmployeesException(errorResponse))))
         .toBodilessEntity()
         .block();
   }
 
   @Override
   public void renameDepartment(String departmentId, String description) {
-    corporateWebClient
+    this.corporateWebClient
         .patch()
         .uri("/departments/{id}/renaming", departmentId)
         .bodyValue(new Department(departmentId, description, null))
@@ -113,7 +123,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public void createDepartment(String id, String description) {
-    corporateWebClient
+    this.corporateWebClient
         .post()
         .uri("/departments")
         .bodyValue(new Department(id, description, null))
@@ -124,7 +134,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public void terminateEmployee(String userId) {
-    corporateWebClient
+    this.corporateWebClient
         .patch()
         .uri("/employees/{id}/termination", userId)
         .retrieve()
@@ -134,7 +144,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public void putEmployeeOnLeave(String userId) {
-    corporateWebClient
+    this.corporateWebClient
         .patch()
         .uri("/employees/{id}/on-leave", userId)
         .retrieve()
@@ -144,7 +154,7 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
 
   @Override
   public void markEmployeeAsInactive(String userId) {
-    corporateWebClient
+    this.corporateWebClient
         .patch()
         .uri("/employees/{id}/inactivation", userId)
         .retrieve()
@@ -214,6 +224,9 @@ public class CorporateOrganizationRepositoryImpl implements CorporateOrganizatio
             response ->
                 response
                     .bodyToMono(ErrorResponse.class)
+                    .defaultIfEmpty(
+                        new ErrorResponse(
+                            List.of(new FieldError("", "", "No error details provided"))))
                     .flatMap(
                         errorResponse ->
                             Mono.error(new DepartmentHeadAssignationException(errorResponse))))
