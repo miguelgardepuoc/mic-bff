@@ -1,0 +1,12 @@
+rest-client:
+  job-offer:
+    host: https://mic-joboffer.mangocliff-d23e761b.westeurope.azurecontainerapps.io/job-offer
+  corporate-organization:
+    host: https://mic-corporateorganization.mangocliff-d23e761b.westeurope.azurecontainerapps.io/corporate-organization
+  analytics:
+    host: https://mic-analytics.mangocliff-d23e761b.westeurope.azurecontainerapps.io/analytics
+cors:
+  allowed-origins:
+    - http://localhost:5173
+    - http://spa-antharos.mangocliff-d23e761b.westeurope.azurecontainerapps.io
+    - https://spa-antharos.mangocliff-d23e761b.westeurope.azurecontainerapps.io
