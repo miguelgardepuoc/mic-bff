@@ -10,3 +10,6 @@ cors:
     - http://localhost:5173
     - http://spa-antharos.mangocliff-d23e761b.westeurope.azurecontainerapps.io
     - https://spa-antharos.mangocliff-d23e761b.westeurope.azurecontainerapps.io
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
