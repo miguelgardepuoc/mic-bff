@@ -25,6 +25,9 @@ public class RestConfig {
   @Value("${rest-client.analytics.host}")
   private String analyticsApiUrl;
 
+  @Value("${rest-client.aiintegrations.host}")
+  private String aiintegrationsApiUrl;
+
   @Bean
   @Qualifier("corporateWebClient")
   public WebClient corporateWebClient(WebClient.Builder builder) {
@@ -70,6 +73,26 @@ public class RestConfig {
   public WebClient analyticsWebClient(WebClient.Builder builder) {
     return builder
         .baseUrl(analyticsApiUrl)
+        .filter(
+            (request, next) -> {
+              String token = JwtTokenInterceptor.getToken();
+              if (token != null) {
+                ClientRequest newRequest =
+                    ClientRequest.from(request).header(HttpHeaders.AUTHORIZATION, token).build();
+                return next.exchange(newRequest);
+              } else {
+                return next.exchange(request);
+              }
+            })
+        .filter(RestConfig.errorHandlingFilter())
+        .build();
+  }
+
+  @Bean
+  @Qualifier("aiintegrationsWebClient")
+  public WebClient aiintegrationsWebClient(WebClient.Builder builder) {
+    return builder
+        .baseUrl(aiintegrationsApiUrl)
         .filter(
             (request, next) -> {
               String token = JwtTokenInterceptor.getToken();

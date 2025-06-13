@@ -5,6 +5,8 @@ rest-client:
     host: https://mic-corporateorganization.mangocliff-d23e761b.westeurope.azurecontainerapps.io/corporate-organization
   analytics:
     host: https://mic-analytics.mangocliff-d23e761b.westeurope.azurecontainerapps.io/analytics
+  aiintegrations:
+    host: https://mic-aiintegrations.mangocliff-d23e761b.westeurope.azurecontainerapps.io/aiintegrations
 cors:
   allowed-origins:
     - http://localhost:5173
